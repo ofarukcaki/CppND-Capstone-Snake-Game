@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, bool *wall) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -48,11 +48,13 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderClear(sdl_renderer);
 
   // Draw wall around the screen
-  SDL_SetRenderDrawColor(sdl_renderer , 0x7E, 0x41, 0x1F, 0xFF);  // brown
-  for (int i = 0 ; i < 10 ; i++)
-  {
-    SDL_Rect box = { i , i , static_cast<int>(screen_width) - 10 , static_cast<int>(screen_height) - 10};
-    SDL_RenderDrawRect(sdl_renderer , &box);
+  if(*wall){
+    SDL_SetRenderDrawColor(sdl_renderer , 0x7E, 0x41, 0x1F, 0xFF);  // brown
+    for (int i = 0 ; i < 10 ; i++)
+    {
+      SDL_Rect box = { i , i , static_cast<int>(screen_width) - 10 , static_cast<int>(screen_height) - 10};
+      SDL_RenderDrawRect(sdl_renderer , &box);
+    }
   }
 
   // Render food

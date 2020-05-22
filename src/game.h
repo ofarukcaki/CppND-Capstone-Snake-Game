@@ -23,7 +23,8 @@ class Game {
   // Renderer _renderer;
   // pause state
   // true if game is paused
-  bool _paused; 
+  bool _paused;
+  bool _wall; // wall around the game screen
 
   std::random_device dev;
   std::mt19937 engine;

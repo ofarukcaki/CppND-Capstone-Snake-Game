@@ -30,7 +30,7 @@ void Game::Run(Controller const &controller, Renderer *renderer,
     controller.HandleInput(running, snake, *this);
     // pass renderer's address
     Update(renderer);
-    renderer->Render(snake, food);
+    renderer->Render(snake, food, &_wall);
 
     frame_end = SDL_GetTicks();
 
