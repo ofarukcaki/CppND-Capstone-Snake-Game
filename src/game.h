@@ -10,7 +10,7 @@
 class Game {
  public:
   Game(std::size_t grid_width, std::size_t grid_height);
-  void Run(Controller const &controller, Renderer &renderer,
+  void Run(Controller const &controller, Renderer *renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
@@ -20,7 +20,7 @@ class Game {
  private:
   Snake snake;
   SDL_Point food;
-
+  // Renderer _renderer;
   // pause state
   // true if game is paused
   bool _paused; 
@@ -33,7 +33,7 @@ class Game {
   int score{0};
 
   void PlaceFood();
-  void Update();
+  void Update(Renderer *renderer);
   void Pause();
   void Resume();
 
