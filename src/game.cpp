@@ -2,6 +2,9 @@
 #include <iostream>
 #include "SDL.h"
 
+
+
+
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
@@ -23,7 +26,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+    controller.HandleInput(running, snake, *this);
     Update();
     renderer.Render(snake, food);
 
@@ -66,6 +69,8 @@ void Game::PlaceFood() {
 }
 
 void Game::Update() {
+  if(this->_paused == true) return;
+  // std::cout << "update called : " << this->_paused << std::endl;
   if (!snake.alive) return;
 
   snake.Update();
@@ -82,6 +87,24 @@ void Game::Update() {
     snake.speed += 0.02;
   }
 }
+
+
+// pause the game if it's already running
+// resume otherwise
+void Game::TriggerPause(){
+  this->_paused ? Resume() : Pause();
+}
+
+// pause the game
+void Game::Pause(){
+  this->_paused = true;
+}
+
+// resume the game
+void Game::Resume(){
+  this->_paused = false;
+}
+
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }

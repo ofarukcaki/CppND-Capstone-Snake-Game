@@ -14,10 +14,16 @@ class Game {
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
+  // methods for pausing/resuming the game
+  void TriggerPause();
 
  private:
   Snake snake;
   SDL_Point food;
+
+  // pause state
+  // true if game is paused
+  bool _paused; 
 
   std::random_device dev;
   std::mt19937 engine;
@@ -28,6 +34,9 @@ class Game {
 
   void PlaceFood();
   void Update();
+  void Pause();
+  void Resume();
+
 };
 
 #endif
