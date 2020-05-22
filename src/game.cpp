@@ -6,7 +6,7 @@
 
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
+    : snake(grid_width, grid_height, &score),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
       random_h(0, static_cast<int>(grid_height)) {
@@ -24,6 +24,7 @@ void Game::Run(Controller const &controller, Renderer *renderer,
 
   while (running) {
     frame_start = SDL_GetTicks();
+
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake, *this);
@@ -52,6 +53,7 @@ void Game::Run(Controller const &controller, Renderer *renderer,
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+
 }
 
 void Game::PlaceFood() {

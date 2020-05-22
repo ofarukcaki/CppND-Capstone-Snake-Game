@@ -59,6 +59,9 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   for (auto const &item : body) {
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
       alive = false;
+      // show a dialog box
+      std::string msgText{"Score: " + std::to_string(*_score) + "\n Size: " + std::to_string(size)};
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), NULL);
     }
   }
 }
