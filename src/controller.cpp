@@ -42,6 +42,10 @@ void Controller::HandleInput(bool &running, Snake &snake, Game &game) const {
           // resume/pause methods
           game.TriggerPause();
           break;
+
+        // capture W key
+        case SDLK_w:
+          game._wall ? game._wall = false : game._wall = true;
       }
     }
   }

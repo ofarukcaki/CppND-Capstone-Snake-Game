@@ -17,6 +17,11 @@ class Game {
   // methods for pausing/resuming the game
   void TriggerPause();
 
+ friend class Controller;
+
+ protected:
+  bool _wall; // wall around the game screen
+
  private:
   Snake snake;
   SDL_Point food;
@@ -24,7 +29,6 @@ class Game {
   // pause state
   // true if game is paused
   bool _paused;
-  bool _wall; // wall around the game screen
 
   std::random_device dev;
   std::mt19937 engine;
