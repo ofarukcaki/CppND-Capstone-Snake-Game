@@ -2,12 +2,12 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update() {
+void Snake::Update(bool *wall) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(
           head_y)};  // We first capture the head's cell before updating.
-  UpdateHead();
+  UpdateHead(wall);
   SDL_Point current_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
@@ -19,7 +19,7 @@ void Snake::Update() {
   }
 }
 
-void Snake::UpdateHead() {
+void Snake::UpdateHead(bool *wall) {
   switch (direction) {
     case Direction::kUp:
       head_y -= speed;
@@ -38,9 +38,22 @@ void Snake::UpdateHead() {
       break;
   }
 
-  // Wrap the Snake around to the beginning if going off of the screen.
-  head_x = fmod(head_x + grid_width, grid_width);
-  head_y = fmod(head_y + grid_height, grid_height);
+  // check if the wall is active
+  if(*wall){
+    // check if snake hit the wall
+    if(head_x > 32 || head_y > 32 || head_x < 0 || head_y < 0){
+      std::cout << "you hit the wall" << std::endl;
+      alive = false;
+      // show a dialog box
+      std::string msgText{"Score: " + std::to_string(*_score) + "\n Size: " + std::to_string(size)};
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), NULL);
+    }    
+  }else{
+    // Wrap the Snake around to the beginning if going off of the screen.
+    // if there is no wall
+    head_x = fmod(head_x + grid_width, grid_width);
+    head_y = fmod(head_y + grid_height, grid_height);
+  }
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {

@@ -80,7 +80,8 @@ void Game::Update(Renderer *renderer) {
   // std::cout << "update called : " << this->_paused << std::endl;
   if (!snake.alive) return;
 
-  snake.Update();
+  // send address of boolean _wall;
+  snake.Update(&_wall);
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
