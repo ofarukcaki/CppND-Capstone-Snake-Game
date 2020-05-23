@@ -13,8 +13,10 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
   PlaceFood();
 }
 
+// Poison timer, if the snake get poisoned the thread 
+// will return snake to normal after 5 seconds
 void TimerThread(bool *poisoned) {
-    std::this_thread::sleep_for(std::chrono::seconds{5});
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     // get back to normal after 5 seconds
     *poisoned = false;
 }
@@ -99,7 +101,7 @@ void Game::Update(Renderer *renderer) {
   std::random_device rd;  //Will be used to obtain a seed for the random number engine
   std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
   std::uniform_int_distribution<> dis(1, 10);
-  // std::cout << dis(gen) << std::endl;
+
   // Check if there's food over here
   if (food.x == new_x && food.y == new_y) {
     score++;
@@ -107,8 +109,8 @@ void Game::Update(Renderer *renderer) {
     // Grow snake and increase speed.
     snake.GrowBody();
 
-    // 50 percentage change for the poisonous food
-    if( 5 <= dis(gen)){
+    // 20 percentage change for the poisonous food
+    if( 2 <= dis(gen)){
       _poisoned = true;
       // resolves 5 seconds later
       std::thread poisonTimer(TimerThread, &_poisoned);
