@@ -29,6 +29,7 @@ class Game {
   // pause state
   // true if game is paused
   bool _paused;
+  bool _poisoned;
 
   std::random_device dev;
   std::mt19937 engine;

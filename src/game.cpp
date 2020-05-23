@@ -1,9 +1,9 @@
 #include "game.h"
 #include <iostream>
 #include "SDL.h"
-
-
-
+#include <thread>
+#include <chrono>
+#include <future>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height, &score),
@@ -11,6 +11,12 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
       random_w(0, static_cast<int>(grid_width)),
       random_h(0, static_cast<int>(grid_height)) {
   PlaceFood();
+}
+
+void TimerThread(bool *poisoned) {
+    std::this_thread::sleep_for(std::chrono::seconds{5});
+    // get back to normal after 5 seconds
+    *poisoned = false;
 }
 
 void Game::Run(Controller const &controller, Renderer *renderer,
@@ -22,6 +28,8 @@ void Game::Run(Controller const &controller, Renderer *renderer,
   int frame_count = 0;
   bool running = true;
 
+
+
   while (running) {
     frame_start = SDL_GetTicks();
 
@@ -30,7 +38,7 @@ void Game::Run(Controller const &controller, Renderer *renderer,
     controller.HandleInput(running, snake, *this);
     // pass renderer's address
     Update(renderer);
-    renderer->Render(snake, food, &_wall);
+    renderer->Render(snake, food, &_wall, &_poisoned);
 
     frame_end = SDL_GetTicks();
 
@@ -71,6 +79,8 @@ void Game::PlaceFood() {
   }
 }
 
+
+
 void Game::Update(Renderer *renderer) {
   if(this->_paused == true) {
     // update window title
@@ -86,13 +96,24 @@ void Game::Update(Renderer *renderer) {
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
 
+  std::random_device rd;  //Will be used to obtain a seed for the random number engine
+  std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+  std::uniform_int_distribution<> dis(1, 10);
+  // std::cout << dis(gen) << std::endl;
   // Check if there's food over here
   if (food.x == new_x && food.y == new_y) {
     score++;
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
-    snake.speed += 0.02;
+
+    // 50 percentage change for the poisonous food
+    if( 5 <= dis(gen)){
+      _poisoned = true;
+      // resolves 5 seconds later
+      std::thread poisonTimer(TimerThread, &_poisoned);
+      poisonTimer.detach();
+    }
   }
 }
 

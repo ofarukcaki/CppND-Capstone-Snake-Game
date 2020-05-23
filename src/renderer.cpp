@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, bool *wall) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, bool *wall, bool *poisoned) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -63,7 +63,13 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, bool *wall) {
   SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  // if snake get poisoned render a greenish body
+  if(*poisoned){
+    SDL_SetRenderDrawColor(sdl_renderer, 0xBE, 0xD3, 0x3D, 0xFF); // greenish color
+  }else{
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  }
+
   for (SDL_Point const &point : snake.body) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
@@ -74,8 +80,10 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, bool *wall) {
   block.x = static_cast<int>(snake.head_x) * block.w;
   block.y = static_cast<int>(snake.head_y) * block.h;
   if (snake.alive) {
+    // head cell
     SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
   } else {
+    // head on died
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
   }
   SDL_RenderFillRect(sdl_renderer, &block);
