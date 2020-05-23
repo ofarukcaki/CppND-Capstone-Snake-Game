@@ -110,7 +110,7 @@ void Game::Update(Renderer *renderer) {
     snake.GrowBody();
 
     // 20 percentage change for the poisonous food
-    if( 2 <= dis(gen)){
+    if(dis(gen) <= 2){
       _poisoned = true;
       // resolves 5 seconds later
       std::thread poisonTimer(TimerThread, &_poisoned);
